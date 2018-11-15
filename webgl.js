@@ -63,6 +63,7 @@ const sketch = ({ context }) => {
   }
   
   const meshes = [];
+  const container = new THREE.Group();
   for (let i = 0; i < 20; i++) {
     const material = new THREE.MeshStandardMaterial({
        color: random.pick(palette),
@@ -74,10 +75,12 @@ const sketch = ({ context }) => {
     randomizeMesh(mesh);
 
     meshes.push(mesh);
-    scene.add(mesh);
+    container.add(mesh);
 
     
   }
+
+  scene.add(container);
 
   const light = new THREE.DirectionalLight("white", 1);
   light.position.set(4,4,0);
@@ -114,7 +117,7 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render ({ deltaTime }) {
+    render ({ time, deltaTime, playhead }) {
       meshes.forEach( (mesh, i) => {
         mesh.time = mesh.time > mesh.duration ? 0 : mesh.time + deltaTime;
         
@@ -135,6 +138,9 @@ const sketch = ({ context }) => {
         mesh.position.y = mapRange(mesh.time, 0 ,mesh.duration, -1, 1);
 
       })
+
+      container.rotation.y = playhead * Math.PI * 2;
+
       controls.update();
       renderer.render(scene, camera);
     },
