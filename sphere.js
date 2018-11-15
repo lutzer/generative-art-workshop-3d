@@ -23,7 +23,7 @@ const sketch = ({ context }) => {
   });
 
   // WebGL background color
-  renderer.setClearColor('#000', 1);
+  renderer.setClearColor('#FFF', 1);
 
   // Setup a camera
   const camera = new THREE.PerspectiveCamera(60, 1, 0.01, 100);
@@ -43,18 +43,23 @@ const sketch = ({ context }) => {
         time: { value: 0 }
       },
       fragmentShader: glsl(/* glsl */`
-        varying vec2 vUv;
+        #pragma glslify: hsl2rgb = require('glsl-hsl2rgb');
+        uniform float time;
+        varying float n;
         void main () {
-          gl_FragColor = vec4(vec3(vUv.x), 1.0);
+          float hue = n * 0.2;
+          hue = mod(hue + time * 0.05, 1.0);
+          vec3 color = hsl2rgb(hue, 0.5, 0.5);
+          gl_FragColor = vec4(color, 1.0);
         }
       `),
       vertexShader: glsl(/* glsl */`
         #pragma glslify: noise = require('glsl-noise/simplex/4d);
         uniform float time;
-        varying vec2 vUv;
+        varying float n;
         void main () {
-          vec3 transformed = position.xyz + normal * noise(vec4(position.xyz, time)) * 0.2;
-          vUv = uv;
+          n = noise(vec4(position.xyz, time));
+          vec3 transformed = position.xyz + normal * n * 0.2;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
         }
       `)
