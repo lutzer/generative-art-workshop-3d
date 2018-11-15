@@ -2,6 +2,7 @@ const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
 const bezierEasing = require('bezier-easing');
+const  { mapRange } = require('canvas-sketch-util/math');
 
 // Ensure ThreeJS is in global scope for the 'examples/'
 global.THREE = require('three');
@@ -41,6 +42,25 @@ const sketch = ({ context }) => {
   const palette = random.pick(palettes);
 
   const geometry = new THREE.BoxGeometry(1,1,1);
+
+  const randomizeMesh = (mesh) => {
+    mesh.scale.y = 0.1
+    mesh.position.set(
+      random.range(-1,1) * 0.5,
+      random.range(-1,1),
+      random.range(-1,1) * 0.5,
+    ).multiplyScalar(1)
+    mesh.scale.set(
+      random.gaussian() * 0.2,
+      random.gaussian() * 0.5,
+      random.gaussian() * 0.2
+    )
+
+    mesh.duration = random.range(2,8);
+    mesh.time = 0;
+    mesh.originalScale = mesh.scale.clone();
+    mesh.material.color.setStyle({ color: random.pick(palette) })
+  }
   
   const meshes = [];
   for (let i = 0; i < 20; i++) {
@@ -50,20 +70,13 @@ const sketch = ({ context }) => {
        metallness: 3
       });
     const mesh = new THREE.Mesh(geometry, material);
+
+    randomizeMesh(mesh);
+
     meshes.push(mesh);
     scene.add(mesh);
 
-    mesh.scale.y = 0.1
-    mesh.position.set(
-      random.range(-1,1),
-      random.range(-1,1),
-      random.range(-1,1)
-    ).multiplyScalar(1.25)
-    mesh.scale.set(
-      random.gaussian() * 0.5,
-      random.gaussian() * 0.5,
-      random.gaussian() * 0.5
-    )
+    
   }
 
   const light = new THREE.DirectionalLight("white", 1);
@@ -81,7 +94,7 @@ const sketch = ({ context }) => {
       const aspect = viewportWidth / viewportHeight;
 
       // Ortho zoom
-      const zoom = 2.5;
+      const zoom = 1;
 
       // Bounds
       camera.left = -zoom * aspect;
@@ -101,10 +114,27 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render ({ playhead }) {
-      const easing = bezierEasing(.61,.22,.27,.92);
-      scene.rotation.y = playhead * Math.PI * 4;
-      scene.rotation.z = easing(playhead) * Math.PI * 2;
+    render ({ deltaTime }) {
+      meshes.forEach( (mesh, i) => {
+        mesh.time = mesh.time > mesh.duration ? 0 : mesh.time + deltaTime;
+        
+        if (mesh.time == 0) {
+          randomizeMesh(mesh);
+        }
+
+        const noise = random.noise2D(
+          i*1000,
+          mesh.time * 0.1
+        )
+
+        const s = Math.max(0.0001, Math.sin(mesh.time / mesh.duration * Math.PI));
+        mesh.scale.copy(mesh.originalScale).multiplyScalar(s);
+
+        mesh.scale.x *= noise;
+
+        mesh.position.y = mapRange(mesh.time, 0 ,mesh.duration, -1, 1);
+
+      })
       controls.update();
       renderer.render(scene, camera);
     },
