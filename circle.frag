@@ -24,7 +24,7 @@ void main () {
     // caluclate distance
     float radius = 0.3;
     float dist = length(coord);
-    float mask = smoothstep(radius, radius - 0.03, dist);
+    float mask = smoothstep(radius + d * 0.2, radius +d - 0.01, dist);
 
     gl_FragColor = vec4(color * mask, mask);
 }
