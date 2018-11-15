@@ -22,8 +22,9 @@ void main () {
     coord.x *= aspect;
 
     // caluclate distance
+    float radius = 0.3;
     float dist = length(coord);
-    float mask = dist < 0.25 ? 1.0 : 0.0;
+    float mask = smoothstep(radius, radius - 0.03, dist);
 
-    gl_FragColor = vec4(color * mask, 1.0);
+    gl_FragColor = vec4(color * mask, mask);
 }

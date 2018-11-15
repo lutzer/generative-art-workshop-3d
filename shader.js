@@ -19,6 +19,7 @@ const sketch =  ({ gl }) => {
     gl,
     // Specify fragment and/or vertex shader strings
     frag,
+    clearColor: "white",
     // Specify additional uniforms to pass down to the shaders
     uniforms: {
       // Expose props from canvas-sketch
