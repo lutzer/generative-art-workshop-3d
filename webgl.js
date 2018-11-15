@@ -68,7 +68,7 @@ const sketch = ({ context }) => {
     const material = new THREE.MeshStandardMaterial({
        color: random.pick(palette),
        roughness: 1,
-       metallness: 3
+       metalness: 0
       });
     const mesh = new THREE.Mesh(geometry, material);
 
@@ -133,7 +133,7 @@ const sketch = ({ context }) => {
         const s = Math.max(0.0001, Math.sin(mesh.time / mesh.duration * Math.PI));
         mesh.scale.copy(mesh.originalScale).multiplyScalar(s);
 
-        mesh.scale.x *= noise;
+        mesh.scale.x *= noise == 0 ? 0.001 : noise;
 
         mesh.position.y = mapRange(mesh.time, 0 ,mesh.duration, -1, 1);
 
