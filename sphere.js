@@ -42,11 +42,19 @@ const sketch = ({ context }) => {
       uniforms: {
         time: { value: 0 }
       },
+      fragmentShader: glsl(/* glsl */`
+        varying vec2 vUv;
+        void main () {
+          gl_FragColor = vec4(vec3(vUv.x), 1.0);
+        }
+      `),
       vertexShader: glsl(/* glsl */`
         #pragma glslify: noise = require('glsl-noise/simplex/4d);
         uniform float time;
+        varying vec2 vUv;
         void main () {
-          vec3 transformed = position.xyz + normal * noise(vec4(position.xyz, time));
+          vec3 transformed = position.xyz + normal * noise(vec4(position.xyz, time)) * 0.2;
+          vUv = uv;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
         }
       `)
