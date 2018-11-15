@@ -13,6 +13,7 @@ const settings = {
   dimensions: [ 512, 512],
   // Make the loop animated
   animate: true,
+  duration: 10,
   // Get a WebGL canvas rather than 2D
   context: 'webgl',
   // Turn on MSAA
@@ -41,10 +42,15 @@ const sketch = ({ context }) => {
 
   const geometry = new THREE.BoxGeometry(1,1,1);
   
-
+  const meshes = [];
   for (let i = 0; i < 20; i++) {
-    const material = new THREE.MeshBasicMaterial({ color: random.pick(palette) });
+    const material = new THREE.MeshStandardMaterial({
+       color: random.pick(palette),
+       roughness: 1,
+       metallness: 3
+      });
     const mesh = new THREE.Mesh(geometry, material);
+    meshes.push(mesh);
     scene.add(mesh);
 
     mesh.scale.y = 0.1
@@ -59,6 +65,10 @@ const sketch = ({ context }) => {
       random.gaussian() * 0.5
     )
   }
+
+  const light = new THREE.DirectionalLight("white", 1);
+  light.position.set(4,4,0);
+  scene.add(light);
   
 
   // draw each frame
@@ -91,10 +101,10 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render ({ time }) {
+    render ({ playhead }) {
       const easing = bezierEasing(.61,.22,.27,.92);
-      scene.rotation.y = time;
-      scene.rotation.x = easing(time * 0.05);
+      scene.rotation.y = playhead * Math.PI * 4;
+      scene.rotation.z = easing(playhead) * Math.PI * 2;
       controls.update();
       renderer.render(scene, camera);
     },
