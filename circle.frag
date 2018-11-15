@@ -1,15 +1,13 @@
-
 precision highp float;
 
-uniform sampler2D image;
 uniform float time;
 varying vec2 vUv;
 
-void main () {
-    // vec3 color = 0.5 + 0.5 * cos(time + vUv.xyx + vec3(0.0, 2.0, 4.0));
-    vec2 uv = vUv;
-    uv.y = 1.0 - uv.y;
+#pragma glslify: noise = require('glsl-noise/simplex/3d');
 
-    vec3 color = texture2D(image, uv).rgb;
+void main () {
+    float d = noise(vec3(vUv * 0.85, time * 0.5)) * 0.5 + 0.5;
+
+    vec3 color = vec3(d);
     gl_FragColor = vec4(color, 1.0);
 }

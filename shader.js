@@ -1,6 +1,5 @@
 const canvasSketch = require('canvas-sketch');
 const createShader = require('canvas-sketch-util/shader');
-const load = require('load-asset');
 
 // Setup our sketch
 const settings = {
@@ -13,8 +12,7 @@ const settings = {
 const frag = require('./circle.frag');
 
 // Your sketch, which simply returns the shader
-const sketch = async ({ gl }) => {
-  const image = await load('baboon.png');
+const sketch =  ({ gl }) => {
   // Create the shader and return it
   return createShader({
     // Pass along WebGL context
@@ -24,7 +22,6 @@ const sketch = async ({ gl }) => {
     // Specify additional uniforms to pass down to the shaders
     uniforms: {
       // Expose props from canvas-sketch
-      image,
       time: ({ time }) => time
     }
   });
