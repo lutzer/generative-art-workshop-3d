@@ -1,6 +1,7 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
+const bezierEasing = require('bezier-easing');
 
 // Ensure ThreeJS is in global scope for the 'examples/'
 global.THREE = require('three');
@@ -9,6 +10,7 @@ global.THREE = require('three');
 require('three/examples/js/controls/OrbitControls');
 
 const settings = {
+  dimensions: [ 512, 512],
   // Make the loop animated
   animate: true,
   // Get a WebGL canvas rather than 2D
@@ -69,7 +71,7 @@ const sketch = ({ context }) => {
       const aspect = viewportWidth / viewportHeight;
 
       // Ortho zoom
-      const zoom = 3;
+      const zoom = 2.5;
 
       // Bounds
       camera.left = -zoom * aspect;
@@ -90,6 +92,9 @@ const sketch = ({ context }) => {
     },
     // Update & render your scene here
     render ({ time }) {
+      const easing = bezierEasing(.61,.22,.27,.92);
+      scene.rotation.y = time;
+      scene.rotation.x = easing(time * 0.05);
       controls.update();
       renderer.render(scene, camera);
     },
