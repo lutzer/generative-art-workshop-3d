@@ -1,3 +1,12 @@
+/**
+ * @Author: Lutz Reiter [http://www.lu-re.de] <lutz>
+ * @Date:   2018-11-17T16:45:34+01:00
+ * @Last modified by:   lutz
+ * @Last modified time: 2018-11-17T16:53:24+01:00
+ */
+
+
+
 const canvasSketch = require('canvas-sketch');
 const glsl = require('glslify')
 
@@ -25,8 +34,8 @@ const sketch = ({ context }) => {
   // const createSphere = (numberOfPoints = 4) => {
   //   let points = [];
   //   for (let i=0; i <= numberOfPoints; i++) {
-  //     points.push([ 
-  //       Math.cos(i / numberOfPoints * Math.PI * 2), 
+  //     points.push([
+  //       Math.cos(i / numberOfPoints * Math.PI * 2),
   //       Math.sin(i / numberOfPoints * Math.PI * 2),
   //       Math.
   //     ]);
@@ -62,7 +71,7 @@ const sketch = ({ context }) => {
           float hue = n * 0.2;
           hue = mod(hue + time * 0.05, 1.0);
           vec3 color = hsl2rgb(hue, 0.5, 0.5);
-          gl_FragColor = vec4(vec3(1.0 - n), 1.0);
+          gl_FragColor = vec4(vec3(0.4 + n * 0.6), 1.0);
         }
       `),
       vertexShader: glsl(/* glsl */`
