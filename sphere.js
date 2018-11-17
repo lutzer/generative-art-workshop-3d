@@ -22,6 +22,18 @@ const sketch = ({ context }) => {
     context
   });
 
+  // const createSphere = (numberOfPoints = 4) => {
+  //   let points = [];
+  //   for (let i=0; i <= numberOfPoints; i++) {
+  //     points.push([ 
+  //       Math.cos(i / numberOfPoints * Math.PI * 2), 
+  //       Math.sin(i / numberOfPoints * Math.PI * 2),
+  //       Math.
+  //     ]);
+  //   }
+  //   return points;
+  // }
+
   // WebGL background color
   renderer.setClearColor('#FFF', 1);
 
@@ -50,7 +62,7 @@ const sketch = ({ context }) => {
           float hue = n * 0.2;
           hue = mod(hue + time * 0.05, 1.0);
           vec3 color = hsl2rgb(hue, 0.5, 0.5);
-          gl_FragColor = vec4(color, 1.0);
+          gl_FragColor = vec4(vec3(1.0 - n), 1.0);
         }
       `),
       vertexShader: glsl(/* glsl */`
@@ -68,10 +80,10 @@ const sketch = ({ context }) => {
   scene.add(mesh);
 
   // Specify an ambient/unlit colour
-  scene.add(new THREE.AmbientLight('#59314f'));
+  scene.add(new THREE.AmbientLight('#fff'));
 
   // Add some light
-  const light = new THREE.PointLight('#45caf7', 1, 15.5);
+  const light = new THREE.PointLight('#fff', 1, 15.5);
   light.position.set(2, 2, -4).multiplyScalar(1.5);
   scene.add(light);
 
