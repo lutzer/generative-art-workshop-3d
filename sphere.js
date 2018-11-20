@@ -2,7 +2,7 @@
  * @Author: Lutz Reiter [http://www.lu-re.de] <lutz>
  * @Date:   2018-11-17T16:45:34+01:00
  * @Last modified by:   lutz
- * @Last modified time: 2018-11-17T16:53:24+01:00
+ * @Last modified time: 2018-11-20T22:32:32+01:00
  */
 
 
@@ -22,7 +22,8 @@ const settings = {
   // Get a WebGL canvas rather than 2D
   context: 'webgl',
   // Turn on MSAA
-  attributes: { antialias: true }
+  attributes: { antialias: true },
+  dimensions: [ 512, 512]
 };
 
 const sketch = ({ context }) => {

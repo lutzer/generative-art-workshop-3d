@@ -1,3 +1,12 @@
+/**
+ * @Author: Lutz Reiter [http://www.lu-re.de] <lutz>
+ * @Date:   2018-11-17T16:45:34+01:00
+ * @Last modified by:   lutz
+ * @Last modified time: 2018-11-17T17:02:23+01:00
+ */
+
+
+
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
@@ -61,7 +70,7 @@ const sketch = ({ context }) => {
     mesh.originalScale = mesh.scale.clone();
     mesh.material.color.setStyle({ color: random.pick(palette) })
   }
-  
+
   const meshes = [];
   const container = new THREE.Group();
   for (let i = 0; i < 20; i++) {
@@ -77,7 +86,7 @@ const sketch = ({ context }) => {
     meshes.push(mesh);
     container.add(mesh);
 
-    
+
   }
 
   scene.add(container);
@@ -85,7 +94,7 @@ const sketch = ({ context }) => {
   const light = new THREE.DirectionalLight("white", 1);
   light.position.set(4,4,0);
   scene.add(light);
-  
+
 
   // draw each frame
   return {
@@ -120,7 +129,7 @@ const sketch = ({ context }) => {
     render ({ time, deltaTime, playhead }) {
       meshes.forEach( (mesh, i) => {
         mesh.time = mesh.time > mesh.duration ? 0 : mesh.time + deltaTime;
-        
+
         if (mesh.time == 0) {
           randomizeMesh(mesh);
         }
@@ -139,7 +148,7 @@ const sketch = ({ context }) => {
 
       })
 
-      container.rotation.y = playhead * Math.PI * 2;
+      //container.rotation.y = playhead * Math.PI * 2;
 
       controls.update();
       renderer.render(scene, camera);
